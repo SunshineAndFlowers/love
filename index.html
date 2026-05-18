@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>520 · 我爱你</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #fff5f7 0%, #ffe4ed 100%);
+            font-family: 'Segoe UI', 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 主容器 */
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 64px 48px 64px 48px;
+            box-shadow: 0 25px 45px rgba(255, 80, 120, 0.25), 0 0 0 1px rgba(255, 200, 210, 0.5);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 装饰头 */
+        .hero {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 32px 24px 48px 24px;
+            text-align: center;
+            position: relative;
+            clip-path: ellipse(85% 100% at 50% 0%);
+        }
+
+        .hero h1 {
+            font-size: 4.8rem;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: #fff;
+            text-shadow: 0 8px 20px rgba(210, 40, 80, 0.3);
+            word-break: keep-all;
+            margin-bottom: 8px;
+        }
+
+        .hero .sub {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #fff9e8;
+            background: rgba(255, 105, 130, 0.3);
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            letter-spacing: 2px;
+        }
+
+        /* 动态爱心漂浮区域 */
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .heart-float {
+            position: absolute;
+            font-size: 1.6rem;
+            opacity: 0.6;
+            animation: floatHeart 8s linear infinite;
+            color: #ff4d6d;
+            user-select: none;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 内容区 */
+        .content {
+            padding: 32px 28px 40px;
+        }
+
+        /* 表白文案区域 */
+        .love-msg {
+            background: #ffffffcc;
+            border-radius: 48px;
+            padding: 28px 20px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 20px rgba(255, 80, 100, 0.1);
+            border: 1px solid #ffb7c5;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .love-msg p {
+            font-size: 1.3rem;
+            line-height: 1.5;
+            color: #c53a5f;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .love-msg .big-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ff2e63;
+            letter-spacing: 2px;
+        }
+
+        .signature {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #ff8aa1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* 计数器和承诺按钮 */
+        .counter-area {
+            background: #ffffffaa;
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(8px);
+            border: 1px solid #ffcdd8;
+        }
+
+        .counter-text {
+            font-weight: 600;
+            color: #bc4e6c;
+        }
+
+        .counter-number {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #ff477e;
+            font-family: monospace;
+            background: #fff0f3;
+            padding: 2px 12px;
+            border-radius: 60px;
+            letter-spacing: 2px;
+        }
+
+        .btn-love {
+            background: linear-gradient(95deg, #ff6b8b, #ff3b5c);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 10px 18px #ff6b8b66;
+            transition: 0.2s;
+            letter-spacing: 1px;
+        }
+
+        .btn-love:active {
+            transform: scale(0.96);
+            background: #ff2b55;
+        }
+
+        /* 浪漫卡片列表 */
+        .reasons {
+            background: #fff2f5;
+            border-radius: 48px;
+            padding: 18px 22px;
+            margin-top: 12px;
+        }
+
+        .reasons h3 {
+            font-size: 1.35rem;
+            color: #dd3b6b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+
+        .reason-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .reason-item {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 36px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #9e3b58;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            border: 0.5px solid #ffc1cf;
+        }
+
+        .reason-icon {
+            font-size: 1.7rem;
+        }
+
+        /* 底部小彩蛋 */
+        .footer-note {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 0.75rem;
+            color: #f598ae;
+            letter-spacing: 1px;
+            border-top: 1px dashed #ffbfcc;
+            padding-top: 20px;
+        }
+
+        /* 响应触摸反馈 */
+        button {
+            background: none;
+            border: none;
+        }
+
+        /* 爱心雨特效 */
+        .rain-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            font-size: 1.8rem;
+            animation: rainDrop 1s ease-out forwards;
+        }
+
+        @keyframes rainDrop {
+            0% {
+                transform: translateY(0) scale(0.6);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(200px) scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* 修微信内滚动条 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="floating-hearts" id="floatingHeartsContainer"></div>
+
+<div class="card">
+    <div class="hero">
+        <h1>5 2 0</h1>
+        <div class="sub">❤️ 我爱你 ❤️</div>
+        <div style="height: 8px;"></div>
+    </div>
+    <div class="content">
+        <div class="love-msg" id="mainMessage">
+            <p>💖 想对你说 💖</p>
+            <div class="big-text">世界万物，你是我的欢喜</div>
+            <div class="signature">
+                <span>✨ 每日心动值 ✨</span>
+                <span>🌹 +∞ 🌹</span>
+            </div>
+        </div>
+
+        <div class="counter-area">
+            <span class="counter-text">❤️ 累计说爱你次数</span>
+            <span class="counter-number" id="loveCounter">520</span>
+            <button class="btn-love" id="confessBtn">💗 大声告白 💗</button>
+        </div>
+
+        <div class="reasons">
+            <h3>🌸 爱你的理由 🌸</h3>
+            <div class="reason-list">
+                <div class="reason-item"><span class="reason-icon">🌼</span> 你的笑容像初夏的风</div>
+                <div class="reason-item"><span class="reason-icon">⭐</span> 和你在一起的每一天都发光</div>
+                <div class="reason-item"><span class="reason-icon">🍰</span> 你让我变成更好的自己</div>
+                <div class="reason-item"><span class="reason-icon">🎵</span> 我们的故事比童话温柔</div>
+            </div>
+        </div>
+        <div class="footer-note">
+            💕 每一天都是520 💕 <br>
+            点击按钮 漫天花雨
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // 动态漂浮爱心 (背景)
+        function createFloatingHeart() {
+            const heartContainer = document.getElementById('floatingHeartsContainer');
+            if (!heartContainer) return;
+            const heart = document.createElement('div');
+            heart.classList.add('heart-float');
+            heart.innerHTML = ['❤️', '💖', '💗', '💓', '💕', '🌸', '🌹'][Math.floor(Math.random() * 7)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = 0.8 + Math.random() * 1.5 + 'rem';
+            heart.style.animationDuration = 5 + Math.random() * 7 + 's';
+            heart.style.animationDelay = Math.random() * 8 + 's';
+            heart.style.opacity = 0.3 + Math.random() * 0.5;
+            heartContainer.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, 13000);
+        }
+
+        // 创建背景漂浮群
+        setInterval(() => {
+            if (document.getElementById('floatingHeartsContainer')) {
+                createFloatingHeart();
+            }
+        }, 1800);
+        for (let i = 0; i < 12; i++) {
+            setTimeout(() => createFloatingHeart(), i * 400);
+        }
+
+        // 爱心雨特效 (点击按钮下落大量爱心)
+        function rainHearts() {
+            const body = document.body;
+            const heartIcons = ['❤️', '💖', '💗', '💘', '💝', '💓', '💞', '🌸', '🌹', '✨'];
+            for (let i = 0; i < 32; i++) {
+                const heartEl = document.createElement('div');
+                heartEl.classList.add('rain-heart');
+                const randomHeart = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                heartEl.innerHTML = randomHeart;
+                // 随机水平位置
+                const leftPos = Math.random() * 100;
+                heartEl.style.left = leftPos + '%';
+                heartEl.style.top = '-20px';
+                heartEl.style.fontSize = 1.2 + Math.random() * 1.6 + 'rem';
+                heartEl.style.animation = 'rainDrop 0.9s ease-out forwards';
+                heartEl.style.animationDelay = Math.random() * 0.2 + 's';
+                body.appendChild(heartEl);
+                setTimeout(() => {
+                    heartEl.remove();
+                }, 1000);
+            }
+            // 额外做一个小振动（微信支持微弱触感？只是模拟特效）
+            try {
+                if (window.navigator && window.navigator.vibrate) {
+                    window.navigator.vibrate(50);
+                }
+            } catch(e) {}
+        }
+
+        // 计数器存储localStorage，保留浪漫印记
+        let loveCount = 520;  // 初始值520意寓我爱你
+        const counterSpan = document.getElementById('loveCounter');
+        const confessBtn = document.getElementById('confessBtn');
+        
+        // 读取之前存储的告白次数(如果之前访问过)
+        try {
+            const saved = localStorage.getItem('520_love_counter');
+            if (saved !== null && !isNaN(parseInt(saved, 10))) {
+                loveCount = parseInt(saved, 10);
+                if (loveCount < 520) loveCount = 520;  // 浪漫保底
+                counterSpan.innerText = loveCount;
+            } else {
+                counterSpan.innerText = loveCount;
+            }
+        } catch(e) { /* 静默 */ }
+
+        // 主消息动态变化数组 (浪漫文案轮换)
+        const messageArray = [
+            { big: "世界万物，你是我的欢喜", sub: "遇见你 是我最大的幸运" },
+            { big: "想和你一起，从清晨到日暮", sub: "朝朝暮暮，都是你" },
+            { big: "你的名字，是我读过最短的情诗", sub: "520❤️ forever" },
+            { big: "我会用最初的心，陪你走最远的路", sub: "一生为期" },
+            { big: "你是我藏在心底的浪漫宇宙", sub: "每天都比昨天更爱你" },
+            { big: "不只是今天，每一天都想说爱你", sub: "我的世界因你完整" }
+        ];
+        
+        let msgIndex = 0;
+        function updateRandomMessage() {
+            const msgDiv = document.getElementById('mainMessage');
+            if (!msgDiv) return;
+            // 优雅切换新文案
+            const newMsg = messageArray[msgIndex % messageArray.length];
+            const bigTextDiv = msgDiv.querySelector('.big-text');
+            const signatureSpan = msgDiv.querySelector('.signature span:first-child');
+            if (bigTextDiv) bigTextDiv.innerText = newMsg.big;
+            if (signatureSpan) signatureSpan.innerHTML = newMsg.sub + " ✨";
+            msgIndex = (msgIndex + 1) % messageArray.length;
+        }
+        
+        // 点击告白按钮 增加计数器，爱心雨，文案切换，且震动效果+声音提醒（温柔）
+        confessBtn.addEventListener('click', function() {
+            // 增加爱的计数，每次至少增加1，有时增加520(惊喜彩蛋) 随机 1~5, 但偶尔520
+            let increment = Math.floor(Math.random() * 5) + 1;
+            const isLucky = Math.random() < 0.15;  // 15%概率额外加52，浪漫加持
+            if (isLucky) increment += 52;
+            loveCount += increment;
+            // 最高不超过99999 但没关系
+            if (loveCount > 99999) loveCount = 99999;
+            counterSpan.innerText = loveCount;
+            // 存储爱意指数
+            try {
+                localStorage.setItem('520_love_counter', loveCount);
+            } catch(e) {}
+            
+            // 触发爱心雨特效
+            rainHearts();
+            
+            // 更换浪漫文案
+            updateRandomMessage();
+            
+            // 可选为按钮添加特殊反馈心跳效果
+            confessBtn.style.transform = 'scale(0.96)';
+            setTimeout(() => {
+                confessBtn.style.transform = '';
+            }, 150);
+            
+            // 额外控制台浪漫彩蛋
+            console.log(`💖 说爱你的第 ${loveCount} 次，永远爱你 💖`);
+            
+            // 动态制造一个瞬间飘出的爱心在按钮周围
+            const btnRect = confessBtn.getBoundingClientRect();
+            for (let i = 0; i < 8; i++) {
+                const flyHeart = document.createElement('div');
+                flyHeart.innerText = '💗';
+                flyHeart.style.position = 'fixed';
+                flyHeart.style.left = (btnRect.left + btnRect.width / 2) + 'px';
+                flyHeart.style.top = (btnRect.top + btnRect.height / 2) + 'px';
+                flyHeart.style.fontSize = '1.5rem';
+                flyHeart.style.pointerEvents = 'none';
+                flyHeart.style.zIndex = '9999';
+                flyHeart.style.opacity = '0.9';
+                flyHeart.style.transition = 'all 0.6s ease-out';
+                document.body.appendChild(flyHeart);
+                const deltaX = (Math.random() - 0.5) * 100;
+                const deltaY = -Math.random() * 100 - 20;
+                setTimeout(() => {
+                    flyHeart.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.5)`;
+                    flyHeart.style.opacity = '0';
+                }, 10);
+                setTimeout(() => flyHeart.remove(), 700);
+            }
+        });
+        
+        // 自动定期切换背景漂浮文字，增添浪漫气息
+        setInterval(() => {
+            // 每隔一段时间如果不打扰，可优雅改变主消息，但不强制频繁
+            if (Math.random() < 0.3) {
+                updateRandomMessage();
+            }
+        }, 8000);
+        
+        // 额外生成随机粒子小爱心(围绕卡片)
+        function createSparkHeart() {
+            const cardElem = document.querySelector('.card');
+            if (!cardElem) return;
+            const cardRect = cardElem.getBoundingClientRect();
+            const spark = document.createElement('div');
+            spark.innerHTML = '❤️';
+            spark.style.position = 'fixed';
+            spark.style.left = cardRect.left + Math.random() * cardRect.width + 'px';
+            spark.style.top = cardRect.top + Math.random() * cardRect.height + 'px';
+            spark.style.fontSize = '1rem';
+            spark.style.pointerEvents = 'none';
+            spark.style.zIndex = '99';
+            spark.style.opacity = '0.7';
+            spark.style.transition = 'all 1s ease';
+            document.body.appendChild(spark);
+            setTimeout(() => {
+                spark.style.transform = 'translateY(-40px) scale(1.3)';
+                spark.style.opacity = '0';
+            }, 20);
+            setTimeout(() => spark.remove(), 1000);
+        }
+        
+        // 每隔4秒在卡片周围飘一颗小爱意
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                createSparkHeart();
+            }
+        }, 3800);
+        
+        // 初始显示一遍效果轮换一次文案增加生机
+        setTimeout(() => {
+            updateRandomMessage();
+            // 首次加载也来一点细雨爱心
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const heartRain = document.createElement('div');
+                    heartRain.classList.add('rain-heart');
+                    heartRain.innerHTML = '💖';
+                    heartRain.style.left = Math.random() * 100 + '%';
+                    heartRain.style.top = '-10px';
+                    heartRain.style.fontSize = '1.2rem';
+                    heartRain.style.animation = 'rainDrop 0.8s ease-out forwards';
+                    document.body.appendChild(heartRain);
+                    setTimeout(() => heartRain.remove(), 900);
+                }, i * 120);
+            }
+        }, 500);
+        
+        // 如果页面是微信内置浏览器，增加更好的提示（已经适配）
+        // 增加点击卡片的小彩蛋：双击主消息烟花样式
+        const loveMsgDiv = document.getElementById('mainMessage');
+        if (loveMsgDiv) {
+            loveMsgDiv.addEventListener('dblclick', function(e) {
+                // 双击出现特殊爱心爆裂效果
+                for (let i=0;i<24;i++) {
+                    const burst = document.createElement('div');
+                    burst.innerText = ['❤️','💖','💗','💘','✨','🌹'][Math.floor(Math.random()*6)];
+                    burst.style.position = 'fixed';
+                    burst.style.left = e.clientX + (Math.random() - 0.5) * 80 + 'px';
+                    burst.style.top = e.clientY + (Math.random() - 0.5) * 80 + 'px';
+                    burst.style.fontSize = 1 + Math.random() * 1.6 + 'rem';
+                    burst.style.pointerEvents = 'none';
+                    burst.style.zIndex = '9999';
+                    burst.style.opacity = '0.9';
+                    burst.style.transition = 'all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1)';
+                    document.body.appendChild(burst);
+                    setTimeout(() => {
+                        burst.style.transform = `translate(${(Math.random()-0.5)*100}px, ${(Math.random()-0.5)*80-40}px) scale(0)`;
+                        burst.style.opacity = '0';
+                    }, 10);
+                    setTimeout(() => burst.remove(), 600);
+                }
+                // 顺便增加计数器浪漫惊喜+5
+                loveCount += 5;
+                counterSpan.innerText = loveCount;
+                localStorage.setItem('520_love_counter', loveCount);
+                // 提示双击爱意
+                const tip = document.createElement('div');
+                tip.innerText = '💞 加倍心动 +5 💞';
+                tip.style.position = 'fixed';
+                tip.style.left = e.clientX - 40 + 'px';
+                tip.style.top = e.clientY - 40 + 'px';
+                tip.style.fontSize = '0.9rem';
+                tip.style.background = '#ffebf0';
+                tip.style.padding = '4px 12px';
+                tip.style.borderRadius = '30px';
+                tip.style.color = '#dc3c6b';
+                tip.style.fontWeight = 'bold';
+                tip.style.pointerEvents = 'none';
+                tip.style.zIndex = '10000';
+                tip.style.whiteSpace = 'nowrap';
+                document.body.appendChild(tip);
+                setTimeout(() => tip.remove(), 1000);
+            });
+        }
+        
+        // 轮播触摸，在微信中webgl背景兼容 — 不做多余处理，保证性能
+        // 页面全部适应微信字体大小等
+        // 修复iOS下点击事件穿透? 确保完美
+        // 让浮动容器范围限制
+        const adjustContainer = () => {
+            const heartsWrap = document.getElementById('floatingHeartsContainer');
+            if (heartsWrap) {
+                heartsWrap.style.position = 'fixed';
+                heartsWrap.style.top = '0';
+                heartsWrap.style.left = '0';
+                heartsWrap.style.width = '100%';
+                heartsWrap.style.height = '100%';
+                heartsWrap.style.pointerEvents = 'none';
+            }
+        };
+        adjustContainer();
+        
+        // 监控窗口resize 稳定背景
+        window.addEventListener('resize', adjustContainer);
+        
+        // 阻止长按菜单减少干扰（但不完全限制用户体验，还是保留部分，我们不破坏习惯）
+        // 只给爱心图片相关区域加简单css 已经全局做了 -webkit-tap-highlight-color
+    })();
+</script>
+</body>
+</html>
